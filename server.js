@@ -38,3 +38,19 @@ app.post('/login', (request, response) => {
         response.render('login', {error: 'Invalid username or password'})
     })
 })
+
+app.get('/register', (request, response) => {
+    response.render('register')
+})
+
+app.post('/register', (request, response) => {
+    const {username, password} = request.body
+
+    db.run('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, password, 'guest'], function (err) {
+        if (err) {
+            return response.render('register', {error: 'Username already exists'})
+        }
+
+        response.redirect('/login')
+    })
+})
