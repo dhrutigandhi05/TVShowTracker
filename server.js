@@ -3,6 +3,7 @@ const path = require('path')
 const app = express()
 const sqlite3 = require('sqlite3').verbose()
 const {engine} = require('express-handlebars')
+const { request } = require('http')
 const db = new sqlite3.Database('./tvshows.db')
 
 // handlebars setup
@@ -53,4 +54,42 @@ app.post('/register', (request, response) => {
 
         response.redirect('/login')
     })
+})
+
+app.get('/dashboard', (request, response) => {
+    if (!currrentUser) {
+        return response.redirect('/login')
+    }
+
+    db.all('SELECT * FROM savedShows WHERE userId = ?', [currrentUser.id], (err, shows) => {
+        response.render('dashboard', {user: currrentUser, shows})
+    })
+})
+
+app.post('/saveShow', (request, response) => {
+    const {showId, showName, imageURL, summary} = request.body
+
+    db.run('INSERT INTO savedShows (userId, showId, showName, imageURL, summary) VALUES (?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary], () =>
+        response.json({success: true})
+    )
+})
+
+app.get('/admin', (request, response) => {
+    if (!currrentUser || currrentUser.role !== 'admin') {
+        return response.redirect('/login')
+    }
+
+    db.all('SELECT username, role FROM users', (err, users) => {
+        response.render('admin', {users})
+    })
+})
+
+app.get('/logout', (request, response) => {
+    currrentUser = null
+    response.redirect('/login')
+})
+
+// start server
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000')
 })
