@@ -1,0 +1,14 @@
+<h2>Welcome {{user.username}}</h2>
+<form id="searchForm">
+  <input type="text" id="searchInput" placeholder="Search TV Shows">
+  <button type="submit">Search</button>
+</form>
+<div id="results"></div>
+<h3>Your Saved Shows</h3>
+<ul>
+  {{#each shows}}
+    <li>{{this.show_name}}</li>
+  {{/each}}
+</ul>
+<a href="/logout">Logout</a>
+{{#if (eq user.role "admin")}}<br><a href="/admin">Admin Panel</a>{{/if}}
