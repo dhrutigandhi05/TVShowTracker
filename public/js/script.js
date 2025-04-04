@@ -1,6 +1,7 @@
 console.log("Script loaded")
 
 document.addEventListener('DOMContentLoaded', () => {
+    alert('JS loaded and running')
     const form = document.getElementById('searchForm')
     const input = document.getElementById('searchInput')
     const resultsDiv = document.getElementById('results')
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             query = query.replace(/\s+/g, '+')
 
             try {
-                const response = await fetch(`https://api.tvmaze.com/search/shows?q=${query}`)
+                const response = await fetch(`/search?q=${query}`)
                 const data = await response.json()
                 resultsDiv.innerHTML = ''
 

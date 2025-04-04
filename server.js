@@ -4,6 +4,7 @@ const app = express()
 const sqlite3 = require('sqlite3').verbose()
 const hbs = require('hbs')
 const { request } = require('http')
+const https = require('https')
 const db = new sqlite3.Database('./tvshows.db')
 
 // handlebars setup
@@ -90,6 +91,34 @@ app.get('/logout', (request, response) => {
     currrentUser = null
     response.redirect('/login')
 })
+
+app.get('/search', (req, res) => {
+    const query = req.query.q
+    if (!query) {
+        return res.status(400).json({ error: 'Missing search query' })
+    }
+
+    const apiUrl = `https://api.tvmaze.com/search/shows?q=${query}`
+
+    https.get(apiUrl, (apiRes) => {
+        let data = ''
+
+        apiRes.on('data', chunk => data += chunk)
+        apiRes.on('end', () => {
+            try {
+                const parsedData = JSON.parse(data)
+                res.json(parsedData)
+            } catch (e) {
+                console.error('Error parsing response:', e)
+                res.status(500).json({ error: 'Failed to parse API response' })
+            }
+        })
+    }).on('error', (err) => {
+        console.error('API fetch error:', err)
+        res.status(500).json({ error: 'Failed to fetch from TVMaze API' })
+    })
+})
+
 
 // start server
 app.listen(3000, () => {
