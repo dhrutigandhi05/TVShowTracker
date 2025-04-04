@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsDiv.innerHTML = ''
 
             data.forEach(result => {
+                const show = result.show
+                const div = document.createElement('div')
                 
             })
         })
