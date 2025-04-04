@@ -28,3 +28,29 @@
   .result-card button:hover {
     background-color: #0056b3;
   }  
+
+  .saved-shows {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  .saved-show-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    max-width: 500px;
+  }
+  
+  .saved-show-card img {
+    max-width: 150px;
+    margin-bottom: 10px;
+  }
+  
+  .saved-show-card h4 {
+    margin: 0;
+    font-size: 1.2em;
+  }
+  

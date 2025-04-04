@@ -68,7 +68,7 @@ app.get('/dashboard', (request, response) => {
         return response.redirect('/login')
     }
 
-    db.all('SELECT * FROM savedShows WHERE userId = ?', [currrentUser.id], (err, shows) => {
+    db.all('SELECT * FROM saved_shows WHERE userId = ?', [currrentUser.id], (err, shows) => {
         response.render('dashboard', {user: currrentUser, shows})
     })
 })
@@ -76,7 +76,7 @@ app.get('/dashboard', (request, response) => {
 app.post('/saveShow', (request, response) => {
     const {showId, showName, imageURL, summary} = request.body
 
-    db.run('INSERT INTO savedShows (userId, showId, showName, imageURL, summary) VALUES (?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary], () =>
+    db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, summary) VALUES (?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary], () =>
         response.json({success: true})
     )
 })

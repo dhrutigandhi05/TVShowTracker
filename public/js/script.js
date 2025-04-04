@@ -1,7 +1,6 @@
 console.log("Script loaded")
 
 document.addEventListener('DOMContentLoaded', () => {
-    alert('JS loaded and running')
     const form = document.getElementById('searchForm')
     const input = document.getElementById('searchInput')
     const resultsDiv = document.getElementById('results')
@@ -74,6 +73,7 @@ function saveShow(showId, showName, imageURL, summary) {
     .then(data => {
         if (data.success) {
             alert('Show saved successfully!')
+            window.location.reload()
         } else {
             alert('Failed to save show.')
         }

@@ -4,10 +4,16 @@
   <button type="submit">Search</button>
 </form>
 <div id="results"></div>
-<h3>Your Saved Shows</h3>
+<h3>Your Watchlist:</h3>
 <ul>
   {{#each shows}}
-    <li>{{this.showName}}</li>
+    <h4>{{this.showName}}</h4>
+    {{#if this.imageURL}}
+      <img src="{{this.imageURL}}" alt="{{this.showName}}">
+    {{/if}}
+    {{!-- {{#if this.summary}}
+      <p>{{{this.summary}}}</p>
+    {{/if}} --}}
   {{/each}}
 </ul>
 <a href="/logout">Logout</a>
