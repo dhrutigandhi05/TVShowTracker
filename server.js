@@ -31,7 +31,7 @@ app.post('/login', (request, response) => {
     const {username, password} = request.body
 
     db.get('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, row) => {
-        if (user) {
+        if (row) {
             currrentUser = row
             return response.redirect('/dashboard')
         }
