@@ -32,11 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <h3>${show.name}</h3>
                         ${imageURL ? `<img src="${imageURL}" alt="${show.name}">` : ''}
                         <div> ${summary}</div>
-                        <button type="button" class="save-button" 
+                        <button type="button" class="saveButton" 
                             data-id="${show.id}"
                             data-name="${show.name}"
                             data-image="${imageURL}"
-                            data-summary="${safeSummary.replace(/"/g, '&quot;')}">
+                            data-summary="${summary.replace(/"/g, '&quot;')}">
                             Save Show
                         </button>
                     `
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         document.getElementById('results').addEventListener('click', (e) => {
-            if (e.target.classList.contains('save-button')) {
+            if (e.target.classList.contains('saveButton')) {
                 const button = e.target
                 const showId = parseInt(button.dataset.id)
                 const showName = button.dataset.name
