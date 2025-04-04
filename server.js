@@ -2,12 +2,16 @@ const express = require('express')
 const path = require('path')
 const app = express()
 const sqlite3 = require('sqlite3').verbose()
+const hbs = require('hbs')
 const { request } = require('http')
 const db = new sqlite3.Database('./tvshows.db')
 
 // handlebars setup
 app.set('view engine', 'hbs')
 app.set('views', './views')
+hbs.registerHelper('eq', function (a, b) {
+    return a === b
+})
 
 // middleware setup
 app.use(express.json())
