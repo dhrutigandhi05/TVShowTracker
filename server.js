@@ -7,9 +7,13 @@ const { request } = require('http')
 const https = require('https')
 const db = new sqlite3.Database('./tvshows.db')
 
+const PORT = process.env.PORT || 3000
+
 // handlebars setup
+hbs.registerPartials(path.join(__dirname, 'views', 'layouts'))
 app.set('view engine', 'hbs')
-app.set('views', './views')
+app.set('view options', { layout: 'layouts/main' })
+// app.set('views', './views')
 hbs.registerHelper('eq', function (a, b) {
     return a === b
 })
@@ -92,35 +96,46 @@ app.get('/logout', (request, response) => {
     response.redirect('/login')
 })
 
-app.get('/search', (req, res) => {
-    const query = req.query.q
+app.get('/search', (request, response) => {
+    const query = request.query.q
+
     if (!query) {
-        return res.status(400).json({ error: 'Missing search query' })
+        response.json({message: 'Please enter a show name'})
+        return    
     }
 
     const apiUrl = `https://api.tvmaze.com/search/shows?q=${query}`
 
-    https.get(apiUrl, (apiRes) => {
+    https.get(apiUrl, (apiResponse) => {
         let data = ''
 
-        apiRes.on('data', chunk => data += chunk)
-        apiRes.on('end', () => {
+        apiResponse.on('data', function(chunk) {
+            data += chunk
+        })
+
+        apiResponse.on('end', () => {
             try {
                 const parsedData = JSON.parse(data)
-                res.json(parsedData)
+                response.json(parsedData)
             } catch (e) {
                 console.error('Error parsing response:', e)
-                res.status(500).json({ error: 'Failed to parse API response' })
+                response.status(500).json({ error: 'Failed to parse API response' })
             }
         })
     }).on('error', (err) => {
         console.error('API fetch error:', err)
-        res.status(500).json({ error: 'Failed to fetch from TVMaze API' })
-    })
+        response.status(500).json({ error: 'Failed to fetch from TVMaze API' })
+    }).end()
 })
 
 
 // start server
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000')
+app.listen(PORT, err => {
+    if (err) {
+        console.log(err)
+    } else {
+      console.log(`Server listening on port: ${PORT}`)
+      console.log(`To Test:`)
+      console.log(`http://localhost:3000`)
+    }
 })
