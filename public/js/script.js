@@ -1,5 +1,9 @@
+console.log("Script loaded")
+
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('seachForm')
+    const form = document.getElementById('searchForm')
+    const input = document.getElementById('searchInput')
+    const resultsDiv = document.getElementById('results')
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -11,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             query = query.replace(/\s+/g, '+')
+
             try {
                 const response = await fetch(`https://api.tvmaze.com/search/shows?q=${query}`)
                 const data = await response.json()
@@ -35,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             Save Show
                         </button>
                     `
+                    resultsDiv.appendChild(div)
                 })
             } catch (error) {
                 console.error('Error fetching data:', error)
