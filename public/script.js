@@ -4,8 +4,20 @@ document.addEventListener('DOMContentLoaded', () => {
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault()
-            const query = document.getElementById('searchInput').value
-            const response = await fetch()
+            let query = input.value.trim()
+
+            if (!query) {
+                return alert('Please enter a search term')
+            }
+
+            query = query.replace(/\s+/g, '+')
+            const response = await fetch(`https://api.tvmaze.com/search/shows?q=${query}`)
+            const data = await response.json()
+            resultsDiv.innerHTML = ''
+
+            data.forEach(result => {
+                
+            })
         })
     }
 })
