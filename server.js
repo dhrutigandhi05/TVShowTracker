@@ -81,6 +81,14 @@ app.post('/saveShow', (request, response) => {
     )
 })
 
+app.post('/deleteShow', (request, response) => {
+    const id = request.body.id
+
+    db.run('DELETE FROM saved_shows WHERE id = ?', [id], () => {
+        response.json({success: true})
+    })
+})
+
 app.get('/admin', (request, response) => {
     if (!currrentUser || currrentUser.role !== 'admin') {
         return response.redirect('/login')

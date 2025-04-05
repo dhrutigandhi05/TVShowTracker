@@ -1,5 +1,3 @@
-console.log("Script loaded")
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('searchForm')
     const input = document.getElementById('searchInput')
@@ -61,6 +59,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 })
 
+document.querySelector('.saved-shows')?.addEventListener('click', (e) => {
+    if (e.target.classList.contains('deleteButton')) {
+        const showId = e.target.dataset.id
+        deleteShow(showId)   
+    }
+})
+
 function saveShow(showId, showName, imageURL, summary) {
     fetch('/saveShow', {
         method: 'POST',
@@ -81,5 +86,28 @@ function saveShow(showId, showName, imageURL, summary) {
     .catch(error => {
         console.error('Error saving show:', error)
         alert('Failed to save show. Please try again later.')
+    })
+}
+
+function deleteShow(id) {
+    fetch('/deleteShow', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({id})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Successfully removed from watchlist!')
+            window.location.reload()
+        } else {
+            alert('Failed to delete show.')
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting show:', error)
+        alert('Failed to delete show. Please try again later.')
     })
 }
