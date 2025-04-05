@@ -2,6 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('searchForm')
     const input = document.getElementById('searchInput')
     const resultsDiv = document.getElementById('results')
+    const clearButton = document.getElementById('clearButton')
+
+    clearButton.addEventListener('click', () => {
+        resultsDiv.innerHTML = ''
+        document.getElementById('searchInput').value = '' 
+    })
 
     if (form) {
         form.addEventListener('submit', async (e) => {
@@ -62,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 })
 
-document.querySelector('.saved-shows')?.addEventListener('click', (e) => {
+document.querySelector('.savedShows')?.addEventListener('click', (e) => {
     const showId = e.target.dataset.id
 
     if (e.target.classList.contains('deleteButton')) {

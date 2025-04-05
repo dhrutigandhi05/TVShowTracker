@@ -16,6 +16,10 @@ h2, h3, h4 {
   color: #2c3e50;
 }
 
+.error {
+  color: red;
+}
+
 form {
   margin: 20px 0;
   display: flex;
@@ -53,7 +57,7 @@ a:hover {
 }
 
 
-.saved-shows,
+.savedShows,
 #results {
   display: flex;
   flex-direction: column;
@@ -61,7 +65,7 @@ a:hover {
   margin-top: 20px;
 }
 
-.saved-show-card,
+.savedShowCard,
 .result {
   background-color: white;
   border: 1px solid #ddd;
@@ -70,16 +74,16 @@ a:hover {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.saved-show-card img,
+.savedShowCard img,
 .result img {
   max-width: 100px;
 }
 
-.saved-show-card p {
+.savedShowCard p {
   margin: 8px 0;
 }
 
-.saved-show-card h4 {
+.savedShowCard h4 {
   margin: 0 0 8px 0;
   padding: 0;
 }

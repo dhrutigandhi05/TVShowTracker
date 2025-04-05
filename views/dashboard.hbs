@@ -10,14 +10,15 @@
 <form id="searchForm">
   <input type="text" id="searchInput" placeholder="Search TV Shows">
   <button type="submit">Search</button>
+  <button type="button" id="clearButton">Clear</button>
 </form>
 
 <div id="results"></div>
 
 <h3>Your Watchlist:</h3>
-<div class="saved-shows">
+<div class="savedShows">
   {{#each shows}}
-    <div class="saved-show-card">
+    <div class="savedShowCard">
       <h4>{{this.showName}}</h4>
       {{#if this.imageURL}}
         {{!-- <br> --}}
