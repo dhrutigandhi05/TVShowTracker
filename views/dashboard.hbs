@@ -1,4 +1,4 @@
-<h2>Welcome {{user.username}}!</h2>
+<h2>Welcome to Watchly, {{user.username}}!</h2>
 
 <form id="searchForm">
   <input type="text" id="searchInput" placeholder="Search TV Shows">
@@ -18,10 +18,13 @@
       {{/if}}
       <br>
       <p><strong>Genre: </strong>{{this.genre}}</p>
+      <button class="moveUp" data-id="{{this.id}}">⬆️</button>
+      <button class="moveDown" data-id="{{this.id}}">⬇️</button>
       <button class="deleteButton" data-id="{{this.id}}">Delete</button>
     </div>
   {{/each}}
 </div>
 
+<br>
 <a href="/logout">Logout</a>
 {{#if (eq user.role "admin")}}<br><a href="/admin">Admin Panel</a>{{/if}}

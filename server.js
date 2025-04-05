@@ -68,7 +68,7 @@ app.get('/dashboard', (request, response) => {
         return response.redirect('/login')
     }
 
-    db.all('SELECT * FROM saved_shows WHERE userId = ?', [currrentUser.id], (err, shows) => {
+    db.all('SELECT * FROM saved_shows WHERE userId = ? ORDER BY position', [currrentUser.id], (err, shows) => {
         response.render('dashboard', {user: currrentUser, shows})
     })
 })
@@ -76,9 +76,19 @@ app.get('/dashboard', (request, response) => {
 app.post('/saveShow', (request, response) => {
     const {showId, showName, imageURL, summary, genre} = request.body
 
-    db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, summary, genre) VALUES (?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary, genre], () =>
-        response.json({success: true})
-    )
+    db.get('SELECT MAX(position) as maxPosition FROM saved_shows WHERE userId = ?', [currrentUser.id], (err, row) => {
+        let maxPosition = 0
+
+        if (row && row.maxPosition != null) {
+            maxPosition = row.maxPosition
+        }
+
+        const newPosition = maxPosition + 1
+        
+        db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, summary, genre, position) VALUES (?, ?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary, genre, newPosition], () =>
+            response.json({success: true})
+        )
+    })
 })
 
 app.post('/deleteShow', (request, response) => {
@@ -86,6 +96,32 @@ app.post('/deleteShow', (request, response) => {
 
     db.run('DELETE FROM saved_shows WHERE id = ?', [id], () => {
         response.json({success: true})
+    })
+})
+
+app.post('/moveUpOrDown', (request, response) => {
+    const {id, direction} = request.body
+
+    db.get('SELECT * FROM saved_shows WHERE id = ?', [id], (err, current) => {
+        if (!current) return res.json({ success: false })
+
+        const operator = direction === 'up' ? '<' : '>'
+        const order = direction === 'up' ? 'DESC' : 'ASC'
+
+        db.get(
+            `SELECT * FROM saved_shows WHERE userId = ? AND position ${operator} ? ORDER BY position ${order} LIMIT 1`,
+            [current.userId, current.position],
+            (err, neighbor) => {
+                if (!neighbor) {
+                    return res.json({ success: false })
+                }
+
+                db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [neighbor.position, current.id])
+                db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [current.position, neighbor.id], () => {
+                    res.json({ success: true })
+                })
+            }
+        )
     })
 })
 

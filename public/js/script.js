@@ -63,9 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 document.querySelector('.saved-shows')?.addEventListener('click', (e) => {
+    const showId = e.target.dataset.id
+
     if (e.target.classList.contains('deleteButton')) {
-        const showId = e.target.dataset.id
         deleteShow(showId)   
+    } else if (e.target.classList.contains('moveUp')) {
+        moveUpOrDown(showId, 'up')
+    } else if (e.target.classList.contains('moveDown')) {
+        moveUpOrDown(showId, 'down')
     }
 })
 
@@ -113,4 +118,21 @@ function deleteShow(id) {
         console.error('Error deleting show:', error)
         alert('Failed to delete show. Please try again later.')
     })
+}
+
+function moveUpOrDown(id, direction) {
+    fetch('/moveUpOrDown', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({id, direction})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload()
+        } else {
+            alert('Cannot move that item.')
+        }
+    })
+    .catch(err => console.error('Move error:', err))
 }
