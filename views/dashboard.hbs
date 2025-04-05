@@ -1,21 +1,27 @@
-<h2>Welcome {{user.username}}</h2>
+<h2>Welcome {{user.username}}!</h2>
+
 <form id="searchForm">
   <input type="text" id="searchInput" placeholder="Search TV Shows">
   <button type="submit">Search</button>
 </form>
+
 <div id="results"></div>
+
 <h3>Your Watchlist:</h3>
-<ul>
+<div class="saved-shows">
   {{#each shows}}
-    <h4>{{this.showName}}</h4>
-    {{#if this.imageURL}}
-      <img src="{{this.imageURL}}" alt="{{this.showName}}">
-    {{/if}}
-    {{!-- {{#if this.summary}}
-      <p>{{{this.summary}}}</p>
-    {{/if}} --}}
-    <button class="deleteButton" data-id="{{this.id}}">Delete</button>
+    <div class="saved-show-card">
+      <h4>{{this.showName}}</h4>
+      {{#if this.imageURL}}
+        <br>
+        <img src="{{this.imageURL}}" alt="{{this.showName}}">
+      {{/if}}
+      <br>
+      <p><strong>Genre: </strong>{{this.genre}}</p>
+      <button class="deleteButton" data-id="{{this.id}}">Delete</button>
+    </div>
   {{/each}}
-</ul>
+</div>
+
 <a href="/logout">Logout</a>
 {{#if (eq user.role "admin")}}<br><a href="/admin">Admin Panel</a>{{/if}}

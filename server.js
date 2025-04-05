@@ -74,9 +74,9 @@ app.get('/dashboard', (request, response) => {
 })
 
 app.post('/saveShow', (request, response) => {
-    const {showId, showName, imageURL, summary} = request.body
+    const {showId, showName, imageURL, summary, genre} = request.body
 
-    db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, summary) VALUES (?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary], () =>
+    db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, summary, genre) VALUES (?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary, genre], () =>
         response.json({success: true})
     )
 })

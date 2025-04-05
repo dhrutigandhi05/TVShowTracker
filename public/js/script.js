@@ -25,16 +25,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     div.className = 'result'
                     const imageURL = show.image?.medium || ''
                     const summary = show.summary || 'Not available'
+                    const genres = show.genres ? show.genres.join(', ') : 'Not available'
 
                     div.innerHTML = `
                         <h3>${show.name}</h3>
                         ${imageURL ? `<img src="${imageURL}" alt="${show.name}">` : ''}
-                        <div> ${summary}</div>
-                        <button type="button" class="saveButton" 
+                        <div>${summary}</div>
+                        <button type="button" class="saveButton"
                             data-id="${show.id}"
                             data-name="${show.name}"
                             data-image="${imageURL}"
-                            data-summary="${summary.replace(/"/g, '&quot;')}">
+                            data-summary="${summary.replace(/"/g, '&quot;')}"
+                            data-genre="${genres.replace(/"/g, '&quot;')}">
                             Save Show
                         </button>
                     `
@@ -53,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const showName = button.dataset.name
                 const imageURL = button.dataset.image
                 const summary = button.dataset.summary
-                saveShow(showId, showName, imageURL, summary)
+                const genre = button.dataset.genre
+                saveShow(showId, showName, imageURL, summary, genre)
             }
         })
     }
@@ -66,13 +69,13 @@ document.querySelector('.saved-shows')?.addEventListener('click', (e) => {
     }
 })
 
-function saveShow(showId, showName, imageURL, summary) {
+function saveShow(showId, showName, imageURL, summary, genre) {
     fetch('/saveShow', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({showId, showName, imageURL, summary})
+        body: JSON.stringify({showId, showName, imageURL, summary, genre})
     })
     .then(response => response.json())
     .then(data => {
