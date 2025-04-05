@@ -1,3 +1,10 @@
+<body>
+  <div class="top-right-buttons">
+    {{#if (eq user.role "admin")}}<a href="/admin" class="adminButton">Admin Panel</a>{{/if}}
+    <a href="/logout" class="logoutButton">Logout</a>
+  </div>
+</body>
+
 <h2>Welcome to Watchly, {{user.username}}!</h2>
 
 <form id="searchForm">
@@ -13,10 +20,9 @@
     <div class="saved-show-card">
       <h4>{{this.showName}}</h4>
       {{#if this.imageURL}}
-        <br>
+        {{!-- <br> --}}
         <img src="{{this.imageURL}}" alt="{{this.showName}}">
       {{/if}}
-      <br>
       <p><strong>Genre: </strong>{{this.genre}}</p>
       {{#unless @first}}<button class="moveUp" data-id="{{this.id}}">⬆️</button>{{/unless}}
       {{#unless @last}}<button class="moveDown" data-id="{{this.id}}">⬇️</button>{{/unless}}
@@ -24,7 +30,3 @@
     </div>
   {{/each}}
 </div>
-
-<br>
-<a href="/logout">Logout</a>
-{{#if (eq user.role "admin")}}<br><a href="/admin">Admin Panel</a>{{/if}}

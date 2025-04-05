@@ -73,27 +73,61 @@ a:hover {
 .saved-show-card img,
 .result img {
   max-width: 100px;
-  border-radius: 6px;
 }
 
 .saved-show-card p {
   margin: 8px 0;
 }
 
+.saved-show-card h4 {
+  margin: 0 0 8px 0;
+  padding: 0;
+}
+
 .result h3 {
-  margin: 0;
+  margin: 8px; 
   color: #2d3436;
 }
 
 .moveUp,
-.moveDown,
-.deleteButton {
+.moveDown{
   margin-right: 8px;
-  background-color: #e17055;
+  background-color: #cfc7d4;
 }
 
 .moveUp:hover,
-.moveDown:hover,
+.moveDown:hover{
+  background-color: #b8b1bd;
+}
+
+.deleteButton {
+  background-color: #f34646;
+}
 .deleteButton:hover {
-  background-color: #d35400;
+  background-color: #ca3939;
+}
+
+.top-right-buttons {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.logoutButton,
+.adminButton,
+.dashboardButton {
+  color: white;
+  background-color: #f37676;
+  padding: 10px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logoutButton:hover,
+.adminButton:hover,
+.dashboardButton:hover {
+  background-color: #cf5656;
 }

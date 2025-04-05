@@ -1,7 +1,12 @@
+<body>
+  <div class="top-right-buttons">
+    <a href="/dashboard" class="dashboardButton">Back to Dashboard</a>
+  </div>
+</body>
+
 <h2>Admin - List of Users</h2>
 <ul>
   {{#each users}}
     <li>{{this.username}} - {{this.role}}</li>
   {{/each}}
 </ul>
-<a href="/dashboard">Back to Dashboard</a>
