@@ -103,25 +103,21 @@ app.post('/moveUpOrDown', (request, response) => {
     const {id, direction} = request.body
 
     db.get('SELECT * FROM saved_shows WHERE id = ?', [id], (err, current) => {
-        if (!current) return res.json({ success: false })
+        if (!current) return response.json({ success: false })
 
         const operator = direction === 'up' ? '<' : '>'
         const order = direction === 'up' ? 'DESC' : 'ASC'
 
-        db.get(
-            `SELECT * FROM saved_shows WHERE userId = ? AND position ${operator} ? ORDER BY position ${order} LIMIT 1`,
-            [current.userId, current.position],
-            (err, neighbor) => {
-                if (!neighbor) {
-                    return res.json({ success: false })
-                }
-
-                db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [neighbor.position, current.id])
-                db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [current.position, neighbor.id], () => {
-                    res.json({ success: true })
-                })
+        db.get(`SELECT * FROM saved_shows WHERE userId = ? AND position ${operator} ? ORDER BY position ${order} LIMIT 1`, [current.userId, current.position], (err, neighbor) => {
+            if (!neighbor) {
+                return response.json({ success: false })
             }
-        )
+
+            db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [neighbor.position, current.id])
+            db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [current.position, neighbor.id], () => {
+                response.json({ success: true })
+            })
+        })
     })
 })
 

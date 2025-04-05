@@ -18,8 +18,8 @@
       {{/if}}
       <br>
       <p><strong>Genre: </strong>{{this.genre}}</p>
-      <button class="moveUp" data-id="{{this.id}}">⬆️</button>
-      <button class="moveDown" data-id="{{this.id}}">⬇️</button>
+      {{#unless @first}}<button class="moveUp" data-id="{{this.id}}">⬆️</button>{{/unless}}
+      {{#unless @last}}<button class="moveDown" data-id="{{this.id}}">⬇️</button>{{/unless}}
       <button class="deleteButton" data-id="{{this.id}}">Delete</button>
     </div>
   {{/each}}
