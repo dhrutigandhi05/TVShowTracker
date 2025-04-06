@@ -126,7 +126,7 @@ app.get('/admin', (request, response) => {
         return response.redirect('/login')
     }
 
-    db.all('SELECT id, username, role FROM users', (err, users) => {
+    db.all('SELECT id, name, username, role FROM users', (err, users) => {
         response.render('admin', {users})
     })
 })
@@ -185,6 +185,7 @@ app.get('/user/:id/watchlist', (request, response) => {
         })
     })
 })
+
 // start server
 app.listen(PORT, err => {
     if (err) {
