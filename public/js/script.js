@@ -32,19 +32,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const imageURL = show.image?.medium || ''
                     const summary = show.summary || 'Not available'
                     const genres = show.genres ? show.genres.join(', ') : 'Not available'
+                    const isAlreadySaved = savedShowIds.includes(show.id)
 
                     div.innerHTML = `
                         <h3>${show.name}</h3>
                         ${imageURL ? `<img src="${imageURL}" alt="${show.name}">` : ''}
                         <div>${summary}</div>
-                        <button type="button" class="saveButton"
-                            data-id="${show.id}"
-                            data-name="${show.name}"
-                            data-image="${imageURL}"
-                            data-summary="${summary.replace(/"/g, '&quot;')}"
-                            data-genre="${genres.replace(/"/g, '&quot;')}">
-                            Save Show
-                        </button>
+                        ${
+                            isAlreadySaved
+                            ? `<p><em>Already in watchlist</em></p>`
+                            : `<button type="button" class="saveButton"
+                                data-id="${show.id}"
+                                data-name="${show.name}"
+                                data-image="${imageURL}"
+                                data-summary="${summary.replace(/"/g, '&quot;')}"
+                                data-genre="${genres.replace(/"/g, '&quot;')}">
+                                Save Show
+                            </button>`
+                        }
                     `
                     resultsDiv.appendChild(div)
                 })
@@ -93,7 +98,7 @@ function saveShow(showId, showName, imageURL, genre) {
             alert('Show saved successfully!')
             window.location.reload()
         } else {
-            alert('Failed to save show.')
+            alert(data.message || 'Failed to save show.')
         }
     })
     .catch(error => {

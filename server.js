@@ -69,26 +69,35 @@ app.get('/dashboard', (request, response) => {
     }
 
     db.all('SELECT * FROM saved_shows WHERE userId = ? ORDER BY position', [currrentUser.id], (err, shows) => {
-        response.render('dashboard', {user: currrentUser, shows})
+        const savedShowIds = shows.map(show => show.showId)
+        response.render('dashboard', {user: currrentUser, shows, savedShowIds: JSON.stringify(savedShowIds) })
     })
 })
 
 app.post('/saveShow', (request, response) => {
     const {showId, showName, imageURL, genre} = request.body
 
-    db.get('SELECT MAX(position) as maxPosition FROM saved_shows WHERE userId = ?', [currrentUser.id], (err, row) => {
-        let maxPosition = 0
-
-        if (row && row.maxPosition != null) {
-            maxPosition = row.maxPosition
+    db.get('SELECT * FROM saved_shows WHERE userId = ? AND showId = ?', [currrentUser.id, showId], (err, existingShow) => {
+        if (existingShow) {
+            return response.json({success: false, message: 'Show already saved'})
         }
 
-        const newPosition = maxPosition + 1
-        
-        db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, genre, position) VALUES (?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, genre, newPosition], () =>
-            response.json({success: true})
-        )
+        db.get('SELECT MAX(position) as maxPosition FROM saved_shows WHERE userId = ?', [currrentUser.id], (err, row) => {
+            let maxPosition = 0
+
+            if (row && row.maxPosition != null) {
+                maxPosition = row.maxPosition
+            }
+
+            const newPosition = maxPosition + 1
+            
+            db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, genre, position) VALUES (?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, genre, newPosition], () =>
+                response.json({success: true})
+            )
+        })
     })
+
+    
 })
 
 app.post('/deleteShow', (request, response) => {
