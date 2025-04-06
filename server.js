@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000
 hbs.registerPartials(path.join(__dirname, 'views', 'layouts'))
 app.set('view engine', 'hbs')
 app.set('view options', { layout: 'layouts/main' })
+
 // app.set('views', './views')
 hbs.registerHelper('eq', function (a, b) {
     return a === b
@@ -26,17 +27,22 @@ app.use(express.static(path.join(__dirname, 'public')))
 let currrentUser = null
 
 // routes setup
+
+// redirect to login by default
 app.get('/', (request, response) => {
     response.redirect('/login')
 })
 
+// render login page
 app.get('/login', (request, response) => {
     response.render('login')
 })
 
+// handle login form submission
 app.post('/login', (request, response) => {
     const {username, password} = request.body
 
+    // validate input
     db.get('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, row) => {
         if (row) {
             currrentUser = row
@@ -47,10 +53,12 @@ app.post('/login', (request, response) => {
     })
 })
 
+// render register page
 app.get('/register', (request, response) => {
     response.render('register')
 })
 
+// handle register form submission
 app.post('/register', (request, response) => {
     const {name, username, password} = request.body
 
@@ -63,20 +71,24 @@ app.post('/register', (request, response) => {
     })
 })
 
+// render dashboard page
 app.get('/dashboard', (request, response) => {
     if (!currrentUser) {
         return response.redirect('/login')
     }
 
+    // get current user's saved shows
     db.all('SELECT * FROM saved_shows WHERE userId = ? ORDER BY position', [currrentUser.id], (err, shows) => {
         const savedShowIds = shows.map(show => show.showId)
         response.render('dashboard', {user: currrentUser, shows, savedShowIds: JSON.stringify(savedShowIds) })
     })
 })
 
+// save show to the watchlist
 app.post('/saveShow', (request, response) => {
     const {showId, showName, imageURL, genre} = request.body
 
+    // prevent duplicate saves
     db.get('SELECT * FROM saved_shows WHERE userId = ? AND showId = ?', [currrentUser.id, showId], (err, existingShow) => {
         if (existingShow) {
             return response.json({success: false, message: 'Show already saved'})
@@ -95,11 +107,10 @@ app.post('/saveShow', (request, response) => {
                 response.json({success: true})
             )
         })
-    })
-
-    
+    }) 
 })
 
+// delete show from the watchlist
 app.post('/deleteShow', (request, response) => {
     const id = request.body.id
 
@@ -108,6 +119,7 @@ app.post('/deleteShow', (request, response) => {
     })
 })
 
+// move show up or down in the watchlist
 app.post('/moveUpOrDown', (request, response) => {
     const {id, direction} = request.body
 
@@ -122,6 +134,7 @@ app.post('/moveUpOrDown', (request, response) => {
                 return response.json({ success: false })
             }
 
+            // swap positions
             db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [neighbor.position, current.id])
             db.run('UPDATE saved_shows SET position = ? WHERE id = ?', [current.position, neighbor.id], () => {
                 response.json({ success: true })
@@ -130,6 +143,7 @@ app.post('/moveUpOrDown', (request, response) => {
     })
 })
 
+// admin page
 app.get('/admin', (request, response) => {
     if (!currrentUser || currrentUser.role !== 'admin') {
         return response.redirect('/login')
@@ -140,11 +154,13 @@ app.get('/admin', (request, response) => {
     })
 })
 
+// logout of account
 app.get('/logout', (request, response) => {
     currrentUser = null
     response.redirect('/login')
 })
 
+// searcing for shows using TVMaze API
 app.get('/search', (request, response) => {
     const query = request.query.q
 
@@ -177,6 +193,7 @@ app.get('/search', (request, response) => {
     }).end()
 })
 
+// render user watchlist page for admin only
 app.get('/user/:id/watchlist', (request, response) => {
     if (!currrentUser || currrentUser.role !== 'admin') {
         return response.redirect('/login')
