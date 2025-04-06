@@ -52,9 +52,9 @@ app.get('/register', (request, response) => {
 })
 
 app.post('/register', (request, response) => {
-    const {username, password} = request.body
+    const {name, username, password} = request.body
 
-    db.run('INSERT INTO users (username, password, role) VALUES (?, ?, ?)', [username, password, 'guest'], function (err) {
+    db.run('INSERT INTO users (name, username, password, role) VALUES (?, ?, ?, ?)', [name, username, password, 'guest'], function (err) {
         if (err) {
             return response.render('register', {error: 'Username already exists'})
         }
@@ -74,7 +74,7 @@ app.get('/dashboard', (request, response) => {
 })
 
 app.post('/saveShow', (request, response) => {
-    const {showId, showName, imageURL, summary, genre} = request.body
+    const {showId, showName, imageURL, genre} = request.body
 
     db.get('SELECT MAX(position) as maxPosition FROM saved_shows WHERE userId = ?', [currrentUser.id], (err, row) => {
         let maxPosition = 0
@@ -85,7 +85,7 @@ app.post('/saveShow', (request, response) => {
 
         const newPosition = maxPosition + 1
         
-        db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, summary, genre, position) VALUES (?, ?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, summary, genre, newPosition], () =>
+        db.run('INSERT INTO saved_shows (userId, showId, showName, imageURL, genre, position) VALUES (?, ?, ?, ?, ?, ?)', [currrentUser.id, showId, showName, imageURL, genre, newPosition], () =>
             response.json({success: true})
         )
     })
@@ -126,7 +126,7 @@ app.get('/admin', (request, response) => {
         return response.redirect('/login')
     }
 
-    db.all('SELECT username, role FROM users', (err, users) => {
+    db.all('SELECT id, username, role FROM users', (err, users) => {
         response.render('admin', {users})
     })
 })
@@ -168,7 +168,23 @@ app.get('/search', (request, response) => {
     }).end()
 })
 
+app.get('/user/:id/watchlist', (request, response) => {
+    if (!currrentUser || currrentUser.role !== 'admin') {
+        return response.redirect('/login')
+    }
 
+    const userId = request.params.id
+
+    db.get('SELECT * FROM users WHERE id = ?', [userId], (err, userRow) => {
+        if (err || !userRow) {
+            return response.status(404).send('User not found')
+        }
+
+        db.all('SELECT * FROM saved_shows WHERE userId = ? ORDER BY position', [userId], (err, shows) => {
+            response.render('adminWatchlist', {layout: 'layouts/main', user: currrentUser, viewedUser: userRow, shows});
+        })
+    })
+})
 // start server
 app.listen(PORT, err => {
     if (err) {

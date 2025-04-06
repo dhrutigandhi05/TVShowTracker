@@ -60,9 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const showId = parseInt(button.dataset.id)
                 const showName = button.dataset.name
                 const imageURL = button.dataset.image
-                const summary = button.dataset.summary
                 const genre = button.dataset.genre
-                saveShow(showId, showName, imageURL, summary, genre)
+                saveShow(showId, showName, imageURL, genre)
             }
         })
     }
@@ -80,13 +79,13 @@ document.querySelector('.savedShows')?.addEventListener('click', (e) => {
     }
 })
 
-function saveShow(showId, showName, imageURL, summary, genre) {
+function saveShow(showId, showName, imageURL, genre) {
     fetch('/saveShow', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({showId, showName, imageURL, summary, genre})
+        body: JSON.stringify({showId, showName, imageURL, genre})
     })
     .then(response => response.json())
     .then(data => {

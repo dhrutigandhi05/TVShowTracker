@@ -1,0 +1,49 @@
+<body>
+  <div class="top-right-buttons">
+    <a href="/admin" class="dashboardButton">← Back to Admin Panel</a>
+    <a href="/logout" class="logoutButton">Logout</a>
+  </div>
+</body>
+
+
+{{!-- <div class="container">
+  <h2>Viewing {{viewedUser.name}}'s Watchlist</h2>
+
+  <div class="savedShows">
+    {{#if shows.length}}
+      {{#each shows}}
+        <div class="savedShowCard">
+          <h4>{{this.showName}}</h4>
+          {{#if this.imageURL}}
+            <img src="{{this.imageURL}}" alt="{{this.showName}}">
+          {{/if}}
+          <p><strong>Genre:</strong> {{this.genre}}</p>
+        </div>
+      {{/each}}
+    {{else}}
+      <p>No shows saved yet.</p>
+    {{/if}}
+  </div>
+</div> --}}
+
+
+
+<h2>{{viewedUser.name}}'s Watchlist</h2>
+<div id="results"></div>
+
+<div class="savedShows">
+  {{#if shows.length}}
+    {{#each shows}}
+      <div class="savedShowCard">
+        <h4>{{this.showName}}</h4>
+        {{#if this.imageURL}}
+          {{!-- <br> --}}
+          <img src="{{this.imageURL}}" alt="{{this.showName}}">
+        {{/if}}
+        <p><strong>Genre: </strong>{{this.genre}}</p>
+      </div>
+    {{/each}}
+    {{else}}
+      <p>No shows saved yet.</p>
+  {{/if}}
+</div>

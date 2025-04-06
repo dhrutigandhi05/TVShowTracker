@@ -7,6 +7,9 @@
 <h2>Admin - List of Users</h2>
 <ul>
   {{#each users}}
-    <li>{{this.username}} - {{this.role}}</li>
+    <li>
+      {{this.username}} - ({{this.role}})
+      <a href="/user/{{this.id}}/watchlist">View Watchlist</a>
+    </li>
   {{/each}}
 </ul>

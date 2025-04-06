@@ -1,6 +1,7 @@
 <h2>Register</h2>
 {{#if error}}<p class="error">{{error}}</p>{{/if}}
 <form method="POST" action="/register">
+  <input name="name" placeholder="Name" required>
   <input name="username" placeholder="Username" required>
   <input name="password" placeholder="Password" type="password" required>
   <button type="submit">Register</button>
