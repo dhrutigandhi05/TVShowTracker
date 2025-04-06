@@ -4,11 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsDiv = document.getElementById('results')
     const clearButton = document.getElementById('clearButton')
 
+    // clear search results and input field
     clearButton.addEventListener('click', () => {
         resultsDiv.innerHTML = ''
         document.getElementById('searchInput').value = '' 
     })
 
+    // handle search form submission
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault()
@@ -25,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json()
                 resultsDiv.innerHTML = ''
 
+                // go through the results and display them
                 data.forEach(result => {
                     const show = result.show
                     const div = document.createElement('div')
@@ -34,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const genres = show.genres ? show.genres.join(', ') : 'Not available'
                     const isAlreadySaved = savedShowIds.includes(show.id)
 
+                    // html for each show
                     div.innerHTML = `
                         <h3>${show.name}</h3>
                         ${imageURL ? `<img src="${imageURL}" alt="${show.name}">` : ''}
@@ -72,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 })
 
+// handle click events for saved shows
 document.querySelector('.savedShows')?.addEventListener('click', (e) => {
     const showId = e.target.dataset.id
 
@@ -84,6 +89,7 @@ document.querySelector('.savedShows')?.addEventListener('click', (e) => {
     }
 })
 
+// save show function
 function saveShow(showId, showName, imageURL, genre) {
     fetch('/saveShow', {
         method: 'POST',
@@ -107,6 +113,7 @@ function saveShow(showId, showName, imageURL, genre) {
     })
 }
 
+// delete show function
 function deleteShow(id) {
     fetch('/deleteShow', {
         method: 'POST',
@@ -130,6 +137,7 @@ function deleteShow(id) {
     })
 }
 
+// move show up or down function
 function moveUpOrDown(id, direction) {
     fetch('/moveUpOrDown', {
         method: 'POST',
